@@ -1,0 +1,84 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore MapDecals/MapDecals.csproj
+      
+    - name: Build Release
+      run: dotnet build MapDecals/MapDecals.csproj -c Release --no-restore
+      
+    - name: Publish
+      run: dotnet publish MapDecals/MapDecals.csproj -c Release -o ./publish --no-build
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: MapDecals-Build
+        path: ./publish/
+        retention-days: 7
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    permissions:
+      contents: write
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore MapDecals/MapDecals.csproj
+      
+    - name: Build Release
+      run: dotnet build MapDecals/MapDecals.csproj -c Release --no-restore
+      
+    - name: Publish
+      run: dotnet publish MapDecals/MapDecals.csproj -c Release -o ./publish --no-build
+      
+    - name: Create release package
+      run: |
+        mkdir -p release/MapDecals
+        cp -r ./publish/* release/MapDecals/
+        cp MapDecals/config.json release/MapDecals/
+        cp README.md release/
+        cp IMPLEMENTATION_NOTES.md release/
+        cd release
+        zip -r MapDecals-${{ github.ref_name }}.zip .
+        
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/MapDecals-${{ github.ref_name }}.zip
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
