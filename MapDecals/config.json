@@ -1,0 +1,28 @@
+{
+  "DatabaseConnection": "Server=localhost;Database=cs2;User=root;Password=;",
+  "DatabaseType": "mysql",
+  "Props": [
+    {
+      "UniqId": "exampleTexture",
+      "Name": "Example Name",
+      "Material": "materials/Example/exampleTexture.vmat",
+      "ShowPermission": ""
+    }
+  ],
+  "PlaceDecalCommands": {
+    "Command": "mapdecal",
+    "Aliases": [
+      "paintmapdecal",
+      "placedecals",
+      "placedecal"
+    ],
+    "Permission": "cc-mapdecals.admin"
+  },
+  "AdToggleCommands": {
+    "Command": "decal",
+    "Aliases": [
+      "decals"
+    ],
+    "Permission": "cc-mapdecals.vip"
+  }
+}
