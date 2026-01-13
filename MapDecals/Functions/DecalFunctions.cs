@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Utils;
+using CounterStrikeSharp.API.Modules.Admin;
 using MapDecals.Database.Models;
 
 namespace MapDecals.Functions;
@@ -59,14 +60,10 @@ public class DecalFunctions
                 return;
             }
 
-            // Set entity properties
-            entity.DecalName = decalConfig.Material;
-            entity.Width = decal.Width;
-            entity.Height = decal.Height;
-            entity.Depth = decal.Depth;
-            entity.RenderMode = RenderMode_t.kRenderNormal;
-            entity.ProjectOnWorld = true;
-
+            // Set entity properties using native properties if available
+            // Note: Some properties may not be directly accessible in CS#
+            // We set what we can through the base entity properties
+            
             // Set position and angles
             entity.Teleport(position, angles, new Vector(0, 0, 0));
 

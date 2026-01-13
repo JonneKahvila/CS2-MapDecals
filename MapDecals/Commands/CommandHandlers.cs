@@ -1,8 +1,8 @@
 using CounterStrikeSharp.API.Core;
-using Microsoft.Extensions.Logging;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API;
+using Microsoft.Extensions.Logging;
 
 namespace MapDecals.Commands;
 
@@ -46,14 +46,14 @@ public class CommandHandlers
         var permission = _plugin.Config.PlaceDecalCommands.Permission;
         if (!string.IsNullOrEmpty(permission) && !AdminManager.PlayerHasPermissions(player, permission))
         {
-            player.PrintToChat($"{[31m}You don't have permission to use this command.");
+            player.PrintToChat(" [MapDecals] You don't have permission to use this command.");
             return;
         }
 
         // Check if player is alive
         if (player.PlayerPawn?.Value == null || !player.PlayerPawn.Value.IsValid || player.PlayerPawn.Value.LifeState != (byte)LifeState_t.LIFE_ALIVE)
         {
-            player.PrintToChat($"{[31m}You must be alive to place decals.");
+            player.PrintToChat(" [MapDecals] You must be alive to place decals.");
             return;
         }
 
@@ -71,7 +71,7 @@ public class CommandHandlers
         var permission = _plugin.Config.AdToggleCommands.Permission;
         if (!string.IsNullOrEmpty(permission) && !AdminManager.PlayerHasPermissions(player, permission))
         {
-            player.PrintToChat($"{[31m}You don't have permission to use this command.");
+            player.PrintToChat(" [MapDecals] You don't have permission to use this command.");
             return;
         }
 
@@ -90,13 +90,13 @@ public class CommandHandlers
                 _plugin.PlayerPreferences[steamId] = newPref;
 
                 // Notify player
-                var status = newPref ? $"{[32m}enabled" : $"{[31m}disabled";
-                player.PrintToChat($"Decals are now {status}{[0m}.");
+                var status = newPref ? "enabled" : "disabled";
+                player.PrintToChat($" [MapDecals] Decals are now {status}.");
             }
             catch (Exception ex)
             {
-                _plugin.Logger?.LogError($"Error toggling decal preference: {ex.Message}");
-                player.PrintToChat($"{[31m}Error toggling decals. Please try again.");
+                _plugin.Logger.LogError($"Error toggling decal preference: {ex.Message}");
+                player.PrintToChat(" [MapDecals] Error toggling decals. Please try again.");
             }
         });
     }

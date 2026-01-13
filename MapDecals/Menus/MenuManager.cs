@@ -1,6 +1,7 @@
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
-using Microsoft.Extensions.Logging;
 using CounterStrikeSharp.API.Modules.Menu;
+using Microsoft.Extensions.Logging;
 using MapDecals.Database.Models;
 
 namespace MapDecals.Menus;
@@ -28,7 +29,7 @@ public class MenuManager
             OpenEditDecalsListMenu(player);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     public void OpenPlaceDecalMenu(CCSPlayerController player)
@@ -48,8 +49,8 @@ public class MenuManager
             {
                 var steamId = player.SteamID.ToString();
                 _plugin.PlacementMode[steamId] = decalConfig.UniqId;
-                player.PrintToChat($"{[32m}Ping where you want to place the decal.");
-                MenuManager.CloseActiveMenu(player);
+                player.PrintToChat(" [MapDecals] Ping where you want to place the decal.");
+                
             });
         }
 
@@ -58,7 +59,7 @@ public class MenuManager
             OpenMainMenu(player);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     public void OpenEditDecalsListMenu(CCSPlayerController player)
@@ -68,7 +69,7 @@ public class MenuManager
         var mapDecals = _plugin.ActiveMapDecals.ToList();
         if (mapDecals.Count == 0)
         {
-            player.PrintToChat($"{[31m}No decals found on this map.");
+            player.PrintToChat(" [MapDecals] No decals found on this map.");
             return;
         }
 
@@ -86,7 +87,7 @@ public class MenuManager
             OpenMainMenu(player);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     public void OpenEditDecalMenu(CCSPlayerController player, MapDecal decal)
@@ -97,8 +98,8 @@ public class MenuManager
         {
             var steamId = player.SteamID.ToString();
             _plugin.RepositionMode[steamId] = decal.Id;
-            player.PrintToChat($"{[32m}Ping the new location for the decal.");
-            MenuManager.CloseActiveMenu(player);
+            player.PrintToChat(" [MapDecals] Ping the new location for the decal.");
+            
         });
 
         menu.AddMenuOption("Adjust Width", (player, option) =>
@@ -138,7 +139,7 @@ public class MenuManager
             OpenEditDecalsListMenu(player);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     private void OpenWidthMenu(CCSPlayerController player, MapDecal decal)
@@ -159,7 +160,7 @@ public class MenuManager
             OpenEditDecalMenu(player, decal);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     private void OpenHeightMenu(CCSPlayerController player, MapDecal decal)
@@ -180,7 +181,7 @@ public class MenuManager
             OpenEditDecalMenu(player, decal);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     private void OpenDepthMenu(CCSPlayerController player, MapDecal decal)
@@ -201,7 +202,7 @@ public class MenuManager
             OpenEditDecalMenu(player, decal);
         });
 
-        MenuManager.OpenChatMenu(player, menu);
+        CounterStrikeSharp.API.Modules.Menu.MenuManager.OpenChatMenu(player, menu);
     }
 
     private void UpdateDecalDimension(CCSPlayerController player, MapDecal decal, string dimension, float value)
@@ -221,27 +222,27 @@ public class MenuManager
                     break;
             }
 
-            CounterStrikeSharp.API.Server.NextFrame(async () =>
+            Server.NextFrame(async () =>
             {
                 try
                 {
                     await _plugin.DatabaseService.UpdateDecalAsync(decal);
                     _plugin.DecalFunctions.DespawnDecal(decal.Id);
                     _plugin.DecalFunctions.SpawnDecal(decal);
-                    player.PrintToChat($"{[32m}Decal {dimension} updated to {value}!");
+                    player.PrintToChat($" [MapDecals] Decal {dimension} updated to {value}!");
                     OpenEditDecalMenu(player, decal);
                 }
                 catch (Exception ex)
                 {
-                    _plugin.Logger?.LogError($"Error updating decal dimension: {ex.Message}");
-                    player.PrintToChat($"{[31m}Error updating decal.");
+                    _plugin.Logger.LogError($"Error updating decal dimension: {ex.Message}");
+                    player.PrintToChat(" [MapDecals] Error updating decal.");
                 }
             });
         }
         catch (Exception ex)
         {
-            _plugin.Logger?.LogError($"Error in UpdateDecalDimension: {ex.Message}");
-            player.PrintToChat($"{[31m}Error updating decal.");
+            _plugin.Logger.LogError($"Error in UpdateDecalDimension: {ex.Message}");
+            player.PrintToChat(" [MapDecals] Error updating decal.");
         }
     }
 
@@ -251,26 +252,26 @@ public class MenuManager
         {
             decal.ForceOnVip = !decal.ForceOnVip;
 
-            CounterStrikeSharp.API.Server.NextFrame(async () =>
+            Server.NextFrame(async () =>
             {
                 try
                 {
                     await _plugin.DatabaseService.UpdateDecalAsync(decal);
                     var status = decal.ForceOnVip ? "ON" : "OFF";
-                    player.PrintToChat($"{[32m}Force on VIP set to {status}!");
+                    player.PrintToChat($" [MapDecals] Force on VIP set to {status}!");
                     OpenEditDecalMenu(player, decal);
                 }
                 catch (Exception ex)
                 {
-                    _plugin.Logger?.LogError($"Error toggling force on VIP: {ex.Message}");
-                    player.PrintToChat($"{[31m}Error updating decal.");
+                    _plugin.Logger.LogError($"Error toggling force on VIP: {ex.Message}");
+                    player.PrintToChat(" [MapDecals] Error updating decal.");
                 }
             });
         }
         catch (Exception ex)
         {
-            _plugin.Logger?.LogError($"Error in ToggleForceOnVip: {ex.Message}");
-            player.PrintToChat($"{[31m}Error updating decal.");
+            _plugin.Logger.LogError($"Error in ToggleForceOnVip: {ex.Message}");
+            player.PrintToChat(" [MapDecals] Error updating decal.");
         }
     }
 
@@ -280,7 +281,7 @@ public class MenuManager
         {
             decal.IsActive = !decal.IsActive;
 
-            CounterStrikeSharp.API.Server.NextFrame(async () =>
+            Server.NextFrame(async () =>
             {
                 try
                 {
@@ -289,27 +290,27 @@ public class MenuManager
                     if (decal.IsActive)
                     {
                         _plugin.DecalFunctions.SpawnDecal(decal);
-                        player.PrintToChat($"{[32m}Decal enabled!");
+                        player.PrintToChat(" [MapDecals] Decal enabled!");
                     }
                     else
                     {
                         _plugin.DecalFunctions.DespawnDecal(decal.Id);
-                        player.PrintToChat($"{[32m}Decal disabled!");
+                        player.PrintToChat(" [MapDecals] Decal disabled!");
                     }
                     
                     OpenEditDecalMenu(player, decal);
                 }
                 catch (Exception ex)
                 {
-                    _plugin.Logger?.LogError($"Error toggling decal active: {ex.Message}");
-                    player.PrintToChat($"{[31m}Error updating decal.");
+                    _plugin.Logger.LogError($"Error toggling decal active: {ex.Message}");
+                    player.PrintToChat(" [MapDecals] Error updating decal.");
                 }
             });
         }
         catch (Exception ex)
         {
-            _plugin.Logger?.LogError($"Error in ToggleDecalActive: {ex.Message}");
-            player.PrintToChat($"{[31m}Error updating decal.");
+            _plugin.Logger.LogError($"Error in ToggleDecalActive: {ex.Message}");
+            player.PrintToChat(" [MapDecals] Error updating decal.");
         }
     }
 
@@ -317,27 +318,27 @@ public class MenuManager
     {
         try
         {
-            CounterStrikeSharp.API.Server.NextFrame(async () =>
+            Server.NextFrame(async () =>
             {
                 try
                 {
                     await _plugin.DatabaseService.DeleteDecalAsync(decal.Id);
                     _plugin.DecalFunctions.DespawnDecal(decal.Id);
                     _plugin.ActiveMapDecals.Remove(decal);
-                    player.PrintToChat($"{[32m}Decal deleted!");
+                    player.PrintToChat(" [MapDecals] Decal deleted!");
                     OpenEditDecalsListMenu(player);
                 }
                 catch (Exception ex)
                 {
-                    _plugin.Logger?.LogError($"Error deleting decal: {ex.Message}");
-                    player.PrintToChat($"{[31m}Error deleting decal.");
+                    _plugin.Logger.LogError($"Error deleting decal: {ex.Message}");
+                    player.PrintToChat(" [MapDecals] Error deleting decal.");
                 }
             });
         }
         catch (Exception ex)
         {
-            _plugin.Logger?.LogError($"Error in DeleteDecal: {ex.Message}");
-            player.PrintToChat($"{[31m}Error deleting decal.");
+            _plugin.Logger.LogError($"Error in DeleteDecal: {ex.Message}");
+            player.PrintToChat(" [MapDecals] Error deleting decal.");
         }
     }
 }

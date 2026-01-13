@@ -1,7 +1,7 @@
 using CounterStrikeSharp.API;
-using Microsoft.Extensions.Logging;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace MapDecals.Events;
 
@@ -57,7 +57,7 @@ public class EventHandlers
             }
             catch (Exception ex)
             {
-                _plugin.Logger?.LogError($"Error loading player decal preference: {ex.Message}");
+                _plugin.Logger.LogError($"Error loading player decal preference: {ex.Message}");
             }
         });
 
@@ -111,7 +111,7 @@ public class EventHandlers
             var decalConfig = _plugin.Config.Props.FirstOrDefault(p => p.UniqId == decalId);
             if (decalConfig == null)
             {
-                player.PrintToChat($"{[31m}Invalid decal configuration.");
+                player.PrintToChat(" [MapDecals] Invalid decal configuration.");
                 return;
             }
 
@@ -151,22 +151,22 @@ public class EventHandlers
                     // Spawn the entity
                     _plugin.DecalFunctions.SpawnDecal(decal);
 
-                    player.PrintToChat($"{[32m}Decal placed successfully!");
+                    player.PrintToChat(" [MapDecals] Decal placed successfully!");
 
                     // Open edit menu
                     _plugin.MenuManager?.OpenEditDecalMenu(player, decal);
                 }
                 catch (Exception ex)
                 {
-                    _plugin.Logger?.LogError($"Error saving decal: {ex.Message}");
-                    player.PrintToChat($"{[31m}Error placing decal. Please try again.");
+                    _plugin.Logger.LogError($"Error saving decal: {ex.Message}");
+                    player.PrintToChat(" [MapDecals] Error placing decal. Please try again.");
                 }
             });
         }
         catch (Exception ex)
         {
-            _plugin.Logger?.LogError($"Error handling decal placement: {ex.Message}");
-            player.PrintToChat($"{[31m}Error placing decal. Please try again.");
+            _plugin.Logger.LogError($"Error handling decal placement: {ex.Message}");
+            player.PrintToChat(" [MapDecals] Error placing decal. Please try again.");
         }
     }
 
@@ -177,7 +177,7 @@ public class EventHandlers
             var decal = _plugin.ActiveMapDecals.FirstOrDefault(d => d.Id == decalId);
             if (decal == null)
             {
-                player.PrintToChat($"{[31m}Decal not found.");
+                player.PrintToChat(" [MapDecals] Decal not found.");
                 return;
             }
 
@@ -202,22 +202,22 @@ public class EventHandlers
                     _plugin.DecalFunctions.DespawnDecal(decalId);
                     _plugin.DecalFunctions.SpawnDecal(decal);
 
-                    player.PrintToChat($"{[32m}Decal repositioned successfully!");
+                    player.PrintToChat(" [MapDecals] Decal repositioned successfully!");
 
                     // Reopen edit menu
                     _plugin.MenuManager?.OpenEditDecalMenu(player, decal);
                 }
                 catch (Exception ex)
                 {
-                    _plugin.Logger?.LogError($"Error repositioning decal: {ex.Message}");
-                    player.PrintToChat($"{[31m}Error repositioning decal. Please try again.");
+                    _plugin.Logger.LogError($"Error repositioning decal: {ex.Message}");
+                    player.PrintToChat(" [MapDecals] Error repositioning decal. Please try again.");
                 }
             });
         }
         catch (Exception ex)
         {
-            _plugin.Logger?.LogError($"Error handling decal reposition: {ex.Message}");
-            player.PrintToChat($"{[31m}Error repositioning decal. Please try again.");
+            _plugin.Logger.LogError($"Error handling decal reposition: {ex.Message}");
+            player.PrintToChat(" [MapDecals] Error repositioning decal. Please try again.");
         }
     }
 }

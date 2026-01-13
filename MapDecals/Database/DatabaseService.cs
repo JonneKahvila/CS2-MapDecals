@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Dapper;
 using MapDecals.Database.Models;
 using Microsoft.Data.Sqlite;
@@ -32,7 +33,7 @@ public class DatabaseService
     public async Task InitializeDatabaseAsync()
     {
         using var connection = CreateConnection();
-        await connection.OpenAsync();
+        await ((DbConnection)connection).OpenAsync();
 
         string createTableQuery = _databaseType switch
         {

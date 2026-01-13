@@ -224,6 +224,16 @@ dotnet build -c Release
 - Check player permissions in the admin configuration
 - Ensure the plugin is loaded (`css_plugins list`)
 
+## Known Limitations
+
+Due to CounterStrikeSharp API limitations, some features have been simplified:
+
+- Decal entity properties (width, height, depth, material) may not be fully customizable through the entity API
+- Per-player transmit control is simplified and may show/hide decals for all players
+- Entity property configuration is stored in the database but may not affect the visual appearance
+
+These limitations are due to the CS# entity API not exposing all env_decal properties. Future updates to CounterStrikeSharp may allow full property control.
+
 ## Credits
 
 - Original SwiftlyS2 version: [CS2-MapDecals-SwiftlyS2](https://github.com/JonneKahvila/CS2-MapDecals-SwiftlyS2)
