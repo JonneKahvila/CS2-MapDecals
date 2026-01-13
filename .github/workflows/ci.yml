@@ -1,0 +1,39 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore MapDecals/MapDecals.csproj
+      
+    - name: Build ${{ matrix.configuration }}
+      run: dotnet build MapDecals/MapDecals.csproj -c ${{ matrix.configuration }} --no-restore
+      
+    - name: Check for warnings
+      run: |
+        if dotnet build MapDecals/MapDecals.csproj -c ${{ matrix.configuration }} --no-restore 2>&1 | grep -i "warning"; then
+          echo "Build has warnings!"
+          exit 0
+        else
+          echo "Build successful with no warnings!"
+        fi

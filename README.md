@@ -1,5 +1,8 @@
 # CS2-MapDecals
 
+[![CI Build](https://github.com/JonneKahvila/CS2-MapDecals/workflows/CI%20Build/badge.svg)](https://github.com/JonneKahvila/CS2-MapDecals/actions)
+[![Build and Release](https://github.com/JonneKahvila/CS2-MapDecals/workflows/Build%20and%20Release/badge.svg)](https://github.com/JonneKahvila/CS2-MapDecals/actions)
+
 A CounterStrikeSharp plugin that allows CS2 server owners to place decals on maps at predefined locations. Players with admin permissions can place decals using ping locations, edit their properties (width, height, depth, position), and toggle visibility.
 
 ## Features
@@ -11,11 +14,12 @@ A CounterStrikeSharp plugin that allows CS2 server owners to place decals on map
 - **Database Support**: Supports MySQL, PostgreSQL, and SQLite
 - **Multi-Map Support**: Decals are saved per-map
 - **Force on VIP**: Option to force certain decals to always show for VIP players
+- **Automated Builds**: GitHub Actions for CI/CD and automated releases
 
 ## Installation
 
 1. Install [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp) on your CS2 server
-2. Download the latest release of MapDecals
+2. Download the latest release from the [Releases page](https://github.com/JonneKahvila/CS2-MapDecals/releases)
 3. Extract the plugin files to `game/csgo/addons/counterstrikesharp/plugins/MapDecals/`
 4. Configure the plugin (see Configuration section)
 5. Restart the server or use `css_plugins load MapDecals`
@@ -205,6 +209,20 @@ dotnet build -c Release
 ```
 
 3. The compiled plugin will be in `bin/Release/net8.0/`
+
+### Creating Releases
+
+The repository includes automated GitHub Actions workflows for building and releasing the plugin. See [RELEASE.md](RELEASE.md) for detailed instructions on:
+- Creating automated releases with version tags
+- Using GitHub Actions for CI/CD
+- Manual release creation
+- Version numbering conventions
+
+**Quick release**: Simply push a version tag to automatically build and create a GitHub release:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
 
 ## Troubleshooting
 
